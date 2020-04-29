@@ -1,6 +1,79 @@
-## Apollo Federation Demo
+## Apollo Federation Demo - Modified
 
-This repository is a demo of using Apollo Federation to build a single schema on top of multiple services. The microservices are located under the [`./services`](./services/) folder and the gateway that composes the overall schema is in the [`gateway.js`](./gateway.js) file.
+This repository is a demo of using Apollo Federation that shows my problems with distributed joins across services.
+
+
+### Problem
+
+Running the following query:
+
+```graphql
+query {
+  topProducts(first: 2, name: "c") {
+    upc
+    name
+    reviews(countGreaterThan: 1) {
+      body
+    }
+  }
+}
+```
+
+### Actual Results
+
+Results in the following response where reviews are blank or null depending on what you return.
+
+```json
+{
+  "data": {
+    "topProducts": [
+      {
+        "upc": "2",
+        "name": "Couch",
+        "reviews": []
+      },
+      {
+        "upc": "3",
+        "name": "Chair",
+        "reviews": []
+      }
+    ]
+  }
+}
+```
+
+### Expected Results
+
+I want the following response because I want to filter the products that have more than 1 review instead of returning an empty array or null for the reviews field.
+
+```json
+{
+  "data": {
+    "topProducts": [
+      {
+        "upc": "4",
+        "name": "Screwdriver",
+        "reviews": [
+          {
+            "body": "Got the job done"
+          },
+          {
+            "body": "Worked alright"
+          },
+          {
+            "body": "Hated it"
+          },
+          {
+            "body": "It was ok"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+I want to know if this is something that apollo federation supports.
 
 ### Installation
 

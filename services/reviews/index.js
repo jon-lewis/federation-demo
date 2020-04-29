@@ -42,7 +42,7 @@ const resolvers = {
   Product: {
     reviews(product, args) {
       let temp = reviews.filter(review => review.product.upc === product.upc);
-      temp = temp.filter(r => r.product.upc === args.upc);
+      temp = temp.filter(r => !args.upc || r.product.upc === args.upc);
       if (!args.countGreaterThan || temp.length > args.countGreaterThan) {
         return temp;
       }
@@ -92,5 +92,29 @@ const reviews = [
     authorID: "2",
     product: { upc: "1" },
     body: "Prefer something else."
+  },
+  {
+    id: "5",
+    authorID: "2",
+    product: { upc: "4" },
+    body: "Got the job done"
+  },
+  {
+    id: "6",
+    authorID: "2",
+    product: { upc: "4" },
+    body: "Worked alright"
+  },
+  {
+    id: "7",
+    authorID: "2",
+    product: { upc: "4" },
+    body: "Hated it"
+  },
+  {
+    id: "8",
+    authorID: "2",
+    product: { upc: "4" },
+    body: "It was ok"
   }
 ];
