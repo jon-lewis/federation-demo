@@ -3,7 +3,7 @@ const { buildFederatedSchema } = require("@apollo/federation");
 
 const typeDefs = gql`
   extend type Query {
-    topProducts(first: Int = 5): [Product]
+    topProducts(first: Int = 5, name: String): [Product]
   }
 
   type Product @key(fields: "upc") {
@@ -22,7 +22,9 @@ const resolvers = {
   },
   Query: {
     topProducts(_, args) {
-      return products.slice(0, args.first);
+      return products
+        .filter(p => !args.name || p.name.toLowerCase().includes(args.name.toLowerCase()))
+        .slice(0, args.first);
     }
   }
 };
@@ -58,5 +60,11 @@ const products = [
     name: "Chair",
     price: 54,
     weight: 50
+  },
+  {
+    upc: "4",
+    name: "Screwdriver",
+    price: 12,
+    weight: 1
   }
 ];

@@ -44,5 +44,6 @@ server.listen({ port: 4004 }).then(({ url }) => {
 const inventory = [
   { upc: "1", inStock: true },
   { upc: "2", inStock: false },
-  { upc: "3", inStock: true }
+  { upc: "3", inStock: true },
+  { upc: "4", inStock: false }
 ];

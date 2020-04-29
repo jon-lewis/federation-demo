@@ -17,7 +17,7 @@ const typeDefs = gql`
 
   extend type Product @key(fields: "upc") {
     upc: String! @external
-    reviews: [Review]
+    reviews(countGreaterThan: Int, upc: String): [Review]
   }
 `;
 
@@ -40,8 +40,13 @@ const resolvers = {
     }
   },
   Product: {
-    reviews(product) {
-      return reviews.filter(review => review.product.upc === product.upc);
+    reviews(product, args) {
+      let temp = reviews.filter(review => review.product.upc === product.upc);
+      temp = temp.filter(r => r.product.upc === args.upc);
+      if (!args.countGreaterThan || temp.length > args.countGreaterThan) {
+        return temp;
+      }
+      return [];
     }
   }
 };
